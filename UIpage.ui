@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1064</width>
+    <height>913</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <widget class="QWidget" name="gridLayoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>110</x>
+     <y>80</y>
+     <width>541</width>
+     <height>701</height>
+    </rect>
+   </property>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="11" column="1" colspan="2">
+     <widget class="QTextEdit" name="textEdit"/>
+    </item>
+    <item row="1" column="0">
+     <widget class="QLabel" name="label">
+      <property name="text">
+       <string>Linked to</string>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="0">
+     <widget class="QRadioButton" name="radioButton">
+      <property name="text">
+       <string>Create new</string>
+      </property>
+     </widget>
+    </item>
+    <item row="14" column="0">
+     <spacer name="verticalSpacer">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>40</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item row="6" column="1" colspan="2">
+     <widget class="QComboBox" name="comboBox_2">
+      <item>
+       <property name="text">
+        <string>Animation</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Audio</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Camera</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Compositing</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Edit</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>FX</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Geometry</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Gizmo</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Hair</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Image Sequence</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Light Rig</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Render</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Rig</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Scene</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Script</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Upload</string>
+       </property>
+      </item>
+     </widget>
+    </item>
+    <item row="10" column="1" colspan="2">
+     <widget class="QLineEdit" name="lineEdit_3">
+      <property name="text">
+       <string>Drop a file here to add a thumbnail.</string>
+      </property>
+     </widget>
+    </item>
+    <item row="7" column="1" colspan="2">
+     <widget class="QLineEdit" name="lineEdit"/>
+    </item>
+    <item row="7" column="0">
+     <widget class="QLabel" name="label_4">
+      <property name="text">
+       <string>Name</string>
+      </property>
+     </widget>
+    </item>
+    <item row="9" column="1" colspan="2">
+     <widget class="QLineEdit" name="lineEdit_2">
+      <property name="text">
+       <string>Select asset</string>
+      </property>
+     </widget>
+    </item>
+    <item row="8" column="0">
+     <widget class="QRadioButton" name="radioButton_2">
+      <property name="text">
+       <string>Version uo existing</string>
+      </property>
+     </widget>
+    </item>
+    <item row="11" column="0">
+     <widget class="QLabel" name="label_7">
+      <property name="text">
+       <string>Description</string>
+      </property>
+     </widget>
+    </item>
+    <item row="10" column="0">
+     <widget class="QLabel" name="label_6">
+      <property name="text">
+       <string>Thunbnail</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="1" rowspan="3">
+     <widget class="QTextEdit" name="textEdit_2">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Ignored" vsizetype="Ignored">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>20</height>
+       </size>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="0">
+     <widget class="QLabel" name="label_3">
+      <property name="text">
+       <string>Type</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="0">
+     <widget class="QLabel" name="label_2">
+      <property name="text">
+       <string>Asset</string>
+      </property>
+     </widget>
+    </item>
+    <item row="9" column="0">
+     <widget class="QLabel" name="label_5">
+      <property name="text">
+       <string>Existing asset</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="2" rowspan="3">
+     <widget class="QPushButton" name="pushButton">
+      <property name="text">
+       <string>Browse</string>
+      </property>
+     </widget>
+    </item>
+    <item row="12" column="1">
+     <widget class="QPushButton" name="pushButton_2">
+      <property name="text">
+       <string>Pubilsh</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
