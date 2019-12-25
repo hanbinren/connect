@@ -7,6 +7,8 @@
           <option value="ftrack_api" />
           <option value="arrow" />
           <option value="list.clear" />
+          <option value="int.append" />
+          <option value="ttt.pyqtSlog" />
         </list>
       </option>
     </inspection_tool>

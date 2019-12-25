@@ -38,9 +38,9 @@ print projects_2[0]['children']
 #     print s
 #     a.append(s)
 
-seq = session.query('Sequence where name is asset')
+seq = session.query('Shot where name is 0060')
 print seq[0].items()
-print seq[0]['parent']['name']
+print seq[0]['name']
 for v in seq[0].items():
     print v
     b.append(v)
@@ -66,47 +66,54 @@ for a in t:
 # #print seqs1['object_type']['name']
 #
 # #
-# # print seqs1.items()
-# # print seqs1['id']
-# seque = session.query('Sequence where name is asset')
-# print seque[0]['parent']['name']
+parent_name = []
+tm = 0
+ti = 1
+print project_dict
+print seq_dict
+try:
+    a = len([k for k, v in seq_dict.items()])
+    self.textEteil1.setRowCount(a)
+    for k, v in seq_dict.items():
+        print k, v
+        if v == 'Shot' or v == 'Asset Build' or v == 'Task':
+            # if v == 'Sequence':
+            ne = QTableWidgetItem(k)
+            self.textEteil1.setItem(tm, 0, ne)
+            se = str(v)
+            ne = QTableWidgetItem(se)
+            self.textEteil1.setItem(tm, ti, ne)
+            tm += 1
 
-# for i in seqs1:
-#     print i
-#
-# a = seqs1['object_type']
-# b = str(a['name'])
-# print b
+            type_name = session.query('{0} where name is {1}'.format(v, k))
+            type_par = type_name[0]['parent']
+            name = type_par['name']
+            print name
+            parent_name.append(name)
+            print parent_name
+            self.textEteil.setPlaceholderText(str(name))
 
+    a = len([k for k, v in project_dict.items()])
+    self.textEteil1.setRowCount(a)
+    for k, v in project_dict.items():
+        print k, v
+        if v == 'Sequence' or v == 'Folder' or v == 'Asset Build':
+            ne = QTableWidgetItem(k)
+            self.textEteil1.setItem(tm, 0, ne)
+            se = str(v)
+            ne = QTableWidgetItem(se)
+            self.textEteil1.setItem(tm, ti, ne)
+            tm += 1
 
-
-
-
-#t = projects_3['name']
-# for i,v in enumerate(t):
-#     print t[i]['name']
-# for i in sorted(session.types.keys()):
-#     print i
-
-# s =session.query('Project where Project.name is')
-# print s
-# for i in s:
-#     print i['name']
-#
-#
-# projects = session.query('Project where name is dayingjia_dyj')
-# print projects
-# print dir(projects)
-# for a in projects:
-#     print a['name']
-#
-# b = session.query('Sequence where project.name is "{0}"'.format(projects[0]['name']))
-# print b
-
-# A = session.query('select name,Project.children from Project')
-# for i in A:
-#     print 'i["name"]-i[0]["children"]'.format()
-# print A
+            type_name = session.query('{0} where name is {1}'.format(v, k))
+            type_par = type_name[0]['parent']
+            name = type_par['name']
+            print name
+            parent_name.append(name)
+            print parent_name
+            self.textEteil.setPlaceholderText(str(name))
+except Exception:
+    pass
 
 
 

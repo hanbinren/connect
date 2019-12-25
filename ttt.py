@@ -6,7 +6,7 @@ import ftrack_api.structure.origin
 import ftrack_api.entity.location
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import pyqtSlot
-from UIpage import *
+from pages import *
 from child import *
 import sys
 
@@ -103,7 +103,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_Form):
 
     #提交功能的按钮
     def publish(self):
-        self.textEdit_2.clear()
+        self.lineEdit.clear()
 
 
 #子窗口
@@ -347,12 +347,12 @@ class ChildWindow(QtWidgets.QDialog, Ui_Dialog):
 
     #确定按钮
     def fix(self):
-        window.textEdit_2.setPlaceholderText('123')
+        window.lineEdit.setPlaceholderText('123')
         self.close()
 
     #退出子窗口
     def out(self):
-        window.textEdit_2.clear()
+        window.lineEdit.clear()
         self.close()
 
 
@@ -367,7 +367,7 @@ if __name__=='__main__':
 
     window=MainWindow()
     child=ChildWindow()
-    window.resize(1000, 600)
+    window.resize(1000, 800)
     window.setWindowTitle('Connect')
     window.setWindowIcon(QIcon('image/C.png'))
 

@@ -17,12 +17,12 @@ server_url='https://ckyh.ftrackapp.cn',
 #     print v['name']
 #     print v['parent_id']
 a = [111,1,1,1,1,6,1,1,1,1]
-a.clare()
+print len(a)
 print a
 a = session.query('Project where name is it')
-b = a[0]['children']
-for c in b:
-    print c['name']
+b = a[0]['name']
+
+
 
 se = session.query('Folder where name is "任务列表"' )
 print se.all()
