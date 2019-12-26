@@ -5,7 +5,7 @@ import ftrack_api.accessor.disk
 import ftrack_api.structure.origin
 import ftrack_api.entity.location
 from PyQt5.QtGui import QIcon
-from PyQt5.QtCore import pyqtSlot
+from PyQt5.QtCore import pyqtSlot,QObject,pyqtSignal
 from pages import *
 from child import *
 import sys
@@ -93,9 +93,12 @@ class MainWindow(QtWidgets.QMainWindow, Ui_Form):
     #拖拽路径去除前缀
     def dragEnterEvent(self, e):
         if e.mimeData().hasText():
-            self.textEdit_2.setText(e.mimeData().text()[8:])
+            e.accept()
         else:
             e.ignore()
+
+    def dropEvent(self,e):
+        self.comboBox.addItem(e.mimeData().text()[8:])
 
     #关联子窗口
     def browse(self):
@@ -104,6 +107,15 @@ class MainWindow(QtWidgets.QMainWindow, Ui_Form):
     #提交功能的按钮
     def publish(self):
         self.lineEdit.clear()
+
+#自定义信号与槽，对应返回按钮
+# class Signal(QObject):
+#     #声明参数信号
+#     sginal = pyqtSignal('Shot','Sequence','Project')
+#     def __init__(self,parent = None):
+#         super(Signal,self).__init__(parent)
+
+
 
 
 #子窗口
@@ -128,7 +140,7 @@ class ChildWindow(QtWidgets.QDialog, Ui_Dialog):
 
         self.pushButton.clicked.connect(self.out)
         self.textEteil1.itemDoubleClicked.connect(self.getItem)
-        self.pushButton2.clicked.connect(self.back)
+        self.pushButton2.clicked.connect(lambda: self.back('Shot'))
 
         self.pushButton1.clicked.connect(self.fix)
 
@@ -245,98 +257,78 @@ class ChildWindow(QtWidgets.QDialog, Ui_Dialog):
                                         tm += 1
 
                 except Exception:
-                    #pass
-                    tm = 0
-                    ti = 1
-                    for k, v in seq_dict.items():
-                        #AssetBuild 中间是没有空格的 如果有空格会报错
-                        print k, v
-                        v = str(v)
-                        s = v.replace(' ','')
-                        print s
-                        if k == item.text():
-                            task1 = session.query(s + ' where name is ' + str(item.text()))
-                            t = task1[0]['children']
-                            print task1
-                            for i, v in enumerate(t):
-                                print i, v
-                                self.textEteil1.setRowCount(i + 1)
-                                ne = QTableWidgetItem(v['name'])
-                                self.textEteil1.setItem(tm, 0, ne)
-                                type_p = t[0]
-                                types = type_p['object_type']
-                                se = str(types['name'])
-                                ne = QTableWidgetItem(se)
-                                self.textEteil1.setItem(tm, ti, ne)
-                                tm += 1
+                    pass
+                    # tm = 0
+                    # ti = 1
+                    # for k, v in seq_dict.items():
+                    #     #AssetBuild 中间是没有空格的 如果有空格会报错
+                    #     print k, v
+                    #     v = str(v)
+                    #     s = v.replace(' ','')
+                    #     print s
+                    #     if k == item.text():
+                    #         task1 = session.query(s + ' where name is ' + str(item.text()))
+                    #         t = task1[0]['children']
+                    #         print task1
+                    #         for i, v in enumerate(t):
+                    #             print i, v
+                    #             self.textEteil1.setRowCount(i + 1)
+                    #             ne = QTableWidgetItem(v['name'])
+                    #             self.textEteil1.setItem(tm, 0, ne)
+                    #             type_p = t[0]
+                    #             types = type_p['object_type']
+                    #             se = str(types['name'])
+                    #             ne = QTableWidgetItem(se)
+                    #             self.textEteil1.setItem(tm, ti, ne)
+                    #             tm += 1
 
     #返回上一级
-    @pyqtSlot(bool)
+
     def back(self,char):
-        name_par = []
-        id = []
         tm = 0
         ti = 1
         print project_dict
         print seq_dict
-        try:
+        for k, v in seq_dict.items():
+            print k, v
+            if v == char:
+                #三次返回
+                a = len([k for k, v in seq_dict.items()])
+                self.textEteil1.setRowCount(a)
+                for k,v in seq_dict.items():
+                    print k,v
+                    #if v == 'Shot' or v == 'Asset Build' or v == 'Task':
+                    if v == 'Sequence':
+                        ne = QTableWidgetItem(k)
+                        self.textEteil1.setItem(tm, 0, ne)
+                        se = str(v)
+                        ne = QTableWidgetItem(se)
+                        self.textEteil1.setItem(tm, ti, ne)
+                        tm += 1
 
-            a = len([k for k, v in seq_dict.items()])
-            self.textEteil1.setRowCount(a)
-            for k,v in seq_dict.items():
-                print k,v
-                #if v == 'Shot' or v == 'Asset Build' or v == 'Task':
-                if v == 'Sequence':
-                    ne = QTableWidgetItem(k)
-                    self.textEteil1.setItem(tm, 0, ne)
-                    se = str(v)
-                    ne = QTableWidgetItem(se)
-                    self.textEteil1.setItem(tm, ti, ne)
-                    tm += 1
+                        type_name = session.query('{0} where name is {1}'.format(v,k))
+                        type_par = type_name[0]['parent']
+                        name = type_par['name']
+                        self.textEteil.setPlaceholderText(str(name))
+            else:
+                #二次返回
+                a = len([k for k, v in project_dict.items()])
+                self.textEteil1.setRowCount(a)
+                for k, v in project_dict.items():
+                    print k, v
+                    if v == 'Sequence' or v == 'Folder' or v == 'Asset Build':
+                        ne = QTableWidgetItem(k)
+                        self.textEteil1.setItem(tm, 0, ne)
+                        se = str(v)
+                        ne = QTableWidgetItem(se)
+                        self.textEteil1.setItem(tm, ti, ne)
+                        tm += 1
 
-                    type_name = session.query('{0} where name is {1}'.format(v,k))
-                    type_par = type_name[0]['parent']
-                    #id_par = type_name[0]['parent_id']
-                    #id.append(id_par)
-                    name = type_par['name']
-                    #name_par.append(name)
-                    self.textEteil.setPlaceholderText(str(name))
-                # for k, v in project_dict.items():
-                #     print k, v
-                #     for i,par in enumerate(name_par):
-                #         par_type = session.query('{0} where name is {1}'.format(v,par))
-                #         own_id = par_type[0]['id']
-                #         own_type = par_type[0]['object_type']
-                #         own_name = par_type[0]['name']
-                #         for son in id:
-                #             if own_id == son:
-                #                 self.textEteil1.setRowCount(i)
-                #                 ne = QTableWidgetItem(own_name)
-                #                 self.textEteil1.setItem(tm, 0, ne)
-                #                 se = str(own_type)
-                #                 ne = QTableWidgetItem(se)
-                #                 self.textEteil1.setItem(tm, ti, ne)
-                #                 tm += 1
-                #                 self.textEteil.setPlaceholderText(str(own_name))
+                        type_name = session.query('{0} where name is {1}'.format(v, k))
+                        type_par = type_name[0]['parent']
+                        name = type_par['name']
+                        self.textEteil.setPlaceholderText(str(name))
 
-            a = len([k for k, v in project_dict.items()])
-            self.textEteil1.setRowCount(a)
-            for k, v in project_dict.items():
-                print k, v
-                if v == 'Sequence' or v == 'Folder' or v == 'Asset Build':
-                    ne = QTableWidgetItem(k)
-                    self.textEteil1.setItem(tm, 0, ne)
-                    se = str(v)
-                    ne = QTableWidgetItem(se)
-                    self.textEteil1.setItem(tm, ti, ne)
-                    tm += 1
-
-                    type_name = session.query('{0} where name is {1}'.format(v, k))
-                    type_par = type_name[0]['parent']
-                    name = type_par['name']
-                    self.textEteil.setPlaceholderText(str(name))
-        except Exception:
-           pass
 
 
         # seq_dict.clear()
@@ -367,7 +359,7 @@ if __name__=='__main__':
 
     window=MainWindow()
     child=ChildWindow()
-    window.resize(1000, 800)
+    window.resize(1300, 800)
     window.setWindowTitle('Connect')
     window.setWindowIcon(QIcon('image/C.png'))
 
