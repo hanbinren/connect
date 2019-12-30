@@ -11,14 +11,44 @@ server_url='https://ckyh.ftrackapp.cn',
     api_user='wangxiaowei@ckyhvfx.com')
 # for i in sorted(session.types.keys()):
 #     print i
-
+#查询所有位置
+location_all = session.query('Location').all()
+print location_all
+for location in location_all:
+    print location['name']
 # projects = session.query('Project')
 # for b in projects:
 #     if b['id'] == b['link'][0]['id']:
 #         name = b['name']
 
+id  = session.query('Location where name is "rd2.y"')
+print id.all()
+locations = id[0]['location_components']
+for location in locations:
+    print location
+print id[0].keys()
 
-
+folder_all_list = []
+    for node_id in node_id_list:
+        node = LocalFolderModule().get_node_data(node_id, graph)
+        if node['label'] == 'folder':
+            node_id_list = LocalFolderModule().get_all_folder_from_folder(node_id, graph)
+            if node_id_list:
+                node_list = json_folders(node_id_list, graph)
+                node_list.sort(key=lambda p_folder: p_folder['name'])
+                node['children'] = node_list
+            folder_all_list.append(node)
+        elif node['label'] == 'transaction':
+            case_id_list = LocalFolderModule().get_all_folder_from_folder(node_id, graph)
+            if case_id_list:
+                case_list = []
+                for case_id in case_id_list:
+                    case_node = LocalFolderModule().get_node_data(case_id, graph)
+                    case_list.append(case_node)
+                case_list.sort(key=lambda p_folder: p_folder['case_name'])
+                node['children'] = case_list
+            folder_all_list.append(node)
+    return folder_all_list
 
 
 # print projects
@@ -33,7 +63,8 @@ a = []
 b= []
 projects_2 = session.query('Project where name is dayingjia_dyj')
 print projects_2[0]['children']
-#print projects_2[0].items()
+print projects_2[0].items()
+print '*'*99
 # for s in projects_2[0].items():
 #     print s
 #     a.append(s)
@@ -66,54 +97,9 @@ for a in t:
 # #print seqs1['object_type']['name']
 #
 # #
-parent_name = []
-tm = 0
-ti = 1
-print project_dict
-print seq_dict
-try:
-    a = len([k for k, v in seq_dict.items()])
-    self.textEteil1.setRowCount(a)
-    for k, v in seq_dict.items():
-        print k, v
-        if v == 'Shot' or v == 'Asset Build' or v == 'Task':
-            # if v == 'Sequence':
-            ne = QTableWidgetItem(k)
-            self.textEteil1.setItem(tm, 0, ne)
-            se = str(v)
-            ne = QTableWidgetItem(se)
-            self.textEteil1.setItem(tm, ti, ne)
-            tm += 1
 
-            type_name = session.query('{0} where name is {1}'.format(v, k))
-            type_par = type_name[0]['parent']
-            name = type_par['name']
-            print name
-            parent_name.append(name)
-            print parent_name
-            self.textEteil.setPlaceholderText(str(name))
 
-    a = len([k for k, v in project_dict.items()])
-    self.textEteil1.setRowCount(a)
-    for k, v in project_dict.items():
-        print k, v
-        if v == 'Sequence' or v == 'Folder' or v == 'Asset Build':
-            ne = QTableWidgetItem(k)
-            self.textEteil1.setItem(tm, 0, ne)
-            se = str(v)
-            ne = QTableWidgetItem(se)
-            self.textEteil1.setItem(tm, ti, ne)
-            tm += 1
 
-            type_name = session.query('{0} where name is {1}'.format(v, k))
-            type_par = type_name[0]['parent']
-            name = type_par['name']
-            print name
-            parent_name.append(name)
-            print parent_name
-            self.textEteil.setPlaceholderText(str(name))
-except Exception:
-    pass
 
 
 

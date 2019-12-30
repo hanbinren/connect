@@ -4,6 +4,9 @@ from ftrack_api import entity
 import ftrack_api.entity.factory
 import ftrack_api.entity.base
 import ftrack_api.cache
+import ftrack_api.accessor.disk
+import ftrack_api.structure.origin
+
 import os
 import arrow
 import ftrack_api
@@ -13,43 +16,95 @@ session=ftrack_api.Session(
     api_user='hanbin'
 )
 
-project_dict = {}
-seq={}
-c = []
-projects_1 = session.query('Project where name is dayingjia_dyj')
-print projects_1
-hierarchy = projects_1[0]['children']
-print hierarchy
-for a in hierarchy:
-    print a['name']
-    s = a['name']
-    type_p = hierarchy[0]
-    types = type_p['object_type']
-    se = str(types['name'])
-    print se
-    project_dict[a['name']] = se
-    print project_dict
-print project_dict
-for key,value in project_dict.items():
-    print key,value
+# project_dict = {}
+# seq={}
+# c = []
+# projects_1 = session.query('Project where name is dayingjia_dyj')
+# print projects_1
+# hierarchy = projects_1[0]['children']
+# print hierarchy
+# for a in hierarchy:
+#     print a['name']
+#     s = a['name']
+#     type_p = hierarchy[0]
+#     types = type_p['object_type']
+#     se = str(types['name'])
+#     print se
+#     project_dict[a['name']] = se
+#     print project_dict
+# print project_dict
+# for key,value in project_dict.items():
+#     print key,value
+#
+# for k,v in project_dict.items():
+#     print k,v
+#     seq1 = session.query(v+' where name is '+k)
+#     t = seq1[0]['children']
+#     for i,v in enumerate(t):
+#         print v['name']
+#         type_p = t[i]
+#         types = type_p['object_type']
+#         se = str(types['name'])
+#         print se
+#         seq[v['name']] = se
+#         print seq
+# print seq
+#寻找ren_ren/bvt/fix_connect
+# task_id = session.query('Task where name is fix_connect')
+# print task_id.all()
+# task = task_id[0]['id']
+# print task
+#获取任务的ID
+task = session.get('Task','f6e644e0-f6d4-11e9-a07d-0a58ac1e0254')
+#任务的父级用与以下发布资产
+task_parent = task['parent']
+print task_parent
+#创建资产和该资产的版本
+task_type = session.query('AssetType where name is "Geometry"').one()
+print task_type
+#创建一个资产
+asset = session.create('Asset',{
+    'name':'my asset',
+    'type':task_type,
+    'parent':task_parent
+})
+print asset
+#创建一个版本
+asset_version = session.create('AssetVersion',{
+    'asset':asset,
+    'task':task
+})
+print asset_version
+print asset_version['id']
+#找到服务器路径
+loc = session.query('Location where name is "rd2.y"')
+for l in loc:
+    print l['name']
+loc[0].keys()
+y = loc[0]
+print y
 
-for k,v in project_dict.items():
-    print k,v
-    seq1 = session.query(v+' where name is '+k)
-    t = seq1[0]['children']
-    for i,v in enumerate(t):
-        print v['name']
-        type_p = t[i]
-        types = type_p['object_type']
-        se = str(types['name'])
-        print se
-        seq[v['name']] = se
-        print seq
-print seq
+y.accessor = ftrack_api.accessor.disk.DiskAccessor(
+    prefix=r'\\rd2\render'
+)
 
-
-
-
+y.structure = ftrack_api.structure.origin.OriginStructure(
+    prefix=r''
+)
+#拿到要传入文件的路径
+path = r'y:\rndtest_rndt\seq1\0010\animation\v001rndt_seq1_0010_v021_wxw.exr'
+#任务不用做资产的父挤，把任务和assetversion直接连接
+#当我们有一个可以创建组建得的版本
+#这将自动创建一个新组件并将其添加到已配置为第一个优先级的位置
+asset_version.create_component(
+    path,
+    data={
+        'name':'render'
+    },
+    location=y
+)
+session.commit()
+session.close()
 
 # print session.types.keys()
 # print session.query('CustomAttributeConfiguration').all()

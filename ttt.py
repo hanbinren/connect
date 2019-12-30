@@ -131,6 +131,7 @@ class ChildWindow(QtWidgets.QDialog, Ui_Dialog):
         projectlist = []
         for project in projects:
             st = str(project['name'])
+            print st
             ne = QTableWidgetItem(st)
             self.textEteil1.setItem(tm,0,ne)
             ne = QTableWidgetItem('Project')

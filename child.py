@@ -32,7 +32,7 @@ class Ui_Dialog(object):
         projects = session.query('Project')
         for project in projects:
             i = len(project['name'])
-        self.textEteil1.setRowCount(i)
+            self.textEteil1.setRowCount(i)
         self.textEteil1.setColumnCount(2)
         self.textEteil1.setHorizontalHeaderLabels(['Name', 'Type'])
         self.textEteil1.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
