@@ -76,21 +76,42 @@ asset_version = session.create('AssetVersion',{
 })
 print asset_version
 print asset_version['id']
+s = asset_version.items()
+print s
+for a in s:
+    print a[0]
+
+
+
+
+
+
+
+
+
+
+
+
+
 #找到服务器路径
 loc = session.query('Location where name is "rd2.y"')
+print loc
+
 for l in loc:
     print l['name']
-loc[0].keys()
+print loc[0].keys()
+
 y = loc[0]
 print y
 
-y.accessor = ftrack_api.accessor.disk.DiskAccessor(
+s = y.accessor = ftrack_api.accessor.disk.DiskAccessor(
     prefix=r'\\rd2\render'
 )
-
-y.structure = ftrack_api.structure.origin.OriginStructure(
+print s
+a = y.structure = ftrack_api.structure.origin.OriginStructure(
     prefix=r''
 )
+print a
 #拿到要传入文件的路径
 path = r'y:\rndtest_rndt\seq1\0010\animation\v001rndt_seq1_0010_v021_wxw.exr'
 #任务不用做资产的父挤，把任务和assetversion直接连接
@@ -103,8 +124,21 @@ asset_version.create_component(
     },
     location=y
 )
+
+asset_version['custom_attributes']['majorversion'] = 2
+asset_version['custom_attributes']['minorversion'] = 1
+for i in asset['versions']['custom_attributes']:
+    print i
+
+
+
 session.commit()
 session.close()
+
+
+
+
+
 
 # print session.types.keys()
 # print session.query('CustomAttributeConfiguration').all()
