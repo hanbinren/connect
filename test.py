@@ -8,12 +8,37 @@ import ftrack_api
 import tempfile
 
 import arrow
-session = ftrack_api.Session(
-server_url='https://ckyh.ftrackapp.cn',
-    api_key='OWM1ODBmMjktMTYxMi00YTVhLWFkMzAtODY3NjQ0NzE1OGI2Ojo1YzQ4YWE0Ny01OWFkLTQ4ODYtYWIzNC0yMWQwNzkwMTY5ZTQ',
-    api_user='wangxiaowei@ckyhvfx.com')
+session=ftrack_api.Session(
+    server_url='https://ckyh.ftrackapp.cn',
+    api_key='MGVmZTdlODMtNzVkZC00MDBmLTllMGItNTFiZjgzZTRjZWI5Ojo0YzdkMTc5My05YzVlLTRkOTEtODZhNC05ZTgzMzdkNTM0OGE',
+    api_user='hanbin'
+)
 
 
+
+
+
+folder_all_list = []
+    for node_id in node_id_list:
+        node = LocalFolderModule().get_node_data(node_id, graph)
+        if node['label'] == 'folder':
+            node_id_list = LocalFolderModule().get_all_folder_from_folder(node_id, graph)
+            if node_id_list:
+                node_list = json_folders(node_id_list, graph)
+                node_list.sort(key=lambda p_folder: p_folder['name'])
+                node['children'] = node_list
+            folder_all_list.append(node)
+        elif node['label'] == 'transaction':
+            case_id_list = LocalFolderModule().get_all_folder_from_folder(node_id, graph)
+            if case_id_list:
+                case_list = []
+                for case_id in case_id_list:
+                    case_node = LocalFolderModule().get_node_data(case_id, graph)
+                    case_list.append(case_node)
+                case_list.sort(key=lambda p_folder: p_folder['case_name'])
+                node['children'] = case_list
+            folder_all_list.append(node)
+    return folder_all_list
 # import ftrack_api
 # import ftrack_api.entity.location
 #
@@ -58,20 +83,28 @@ server_url='https://ckyh.ftrackapp.cn',
 
 shot = session.query('Shot where project.name is "rndtest_rndt"'
                      'and parent.name is "seq1"and name is "0010"').one()
-print shot
+print shot['name']
 task=shot['children'][0]
-print task
+print task['name']
 #创建资产
-asset_type = session.query('AssetType where short is "Upload"').first()
-print asset_type
+asset_type = session.query('AssetType where name is "Upload"').first()
+print asset_type['name']
 asset = session.create('Asset',{
     'parent':shot,
     'name':'forest',
     'type':asset_type
 })
+print asset['parent']['name']
+asset_name = session.query('Asset where name is "forest"')
+print asset_name
+for asset_n in asset_name:
+    print asset_n['name']
+
+task_name = session.query('Task where name is "comp"').first()
+
 #为资产里创建一个新的版本
 status = session.query('Status where name is "In progress"').one()
-print status
+print status['name']
 version = session.create('AssetVersion',{
     'Asset':asset,
     'status':status,
@@ -80,36 +113,43 @@ version = session.create('AssetVersion',{
 
 })
 print version['version']
-#持续保存的时候再创建版本号
-a ='Version number before commit: {0}'.format(version['version'])
-print a
+print version['id']
 
-#session.commit()
-print 'Version number after commit: {0}'.format(version['version'])
-#改变路径的前缀
-loc = session.query('Location where name is "rd2.y"')
-print loc[0]
+
+# #持续保存的时候再创建版本号
+# a ='Version number before commit: {0}'.format(version['version'])
+# print a
+#
+# #session.commit()
+# print 'Version number after commit: {0}'.format(version['version'])
+#找到服务器路径
+loc = session.query('Location where name is "my.location"')
+#print loc[0]
 y = loc[0]
-
-ftrack_api.mixin(y, ftrack_api.entity.location.UnmanagedLocationMixin)
-
-y.accessor = ftrack_api.accessor.disk.DiskAccessor(prefix=r'\\rd2\render')
-
+#取消数据的自动管理
+#ftrack_api.mixin(y, ftrack_api.entity.location.UnmanagedLocationMixin)
+#本地文件的系统访问,设置临时空间
+y.accessor = ftrack_api.accessor.disk.DiskAccessor(prefix=r'\\dr2\render')
+#生成资源标识符
 y.structure = ftrack_api.structure.origin.OriginStructure(prefix=r'')
-
-#添加一些组件
+#
+# #添加一些组件
 component_path = r'y:\rndtest_rndt\seq1\0010\animation\v001\rndt_seq1_0010_v021_wxw.exr'
+# print component_path
+#
+# #print version.create_component(component_path,location=y)
+#
+# model_path = r'y:\rndtest_rndt\seq1\0010\comp\v008\mov\rndt_seq1_0010_comp_v008_ytj.mov'
+compenent_model = version.create_component(component_path,data={
+    'name':'model'},
+ location=y)
 
-version.create_component(component_path,location=y)
-
-model_path = r'y:\rndtest_rndt\seq1\0010\comp\v008\mov\rndt_seq1_0010_comp_v008_ytj.mov'
-compenent_model = version.create_component(model_path,{
-    'name':'model'
-},location=y)
-
-version['is_published']=True
-
+#
+# #必须附加到已提交版本和具有父上下文的已提交资产
+# version['is_published']=True
+#
 session.commit()
+# session.close()
 # 将缩略图添加到版本.
 # thumbnail = version.create_thumbnail(
 #     '/path/to/forest_thumbnail.jpg'

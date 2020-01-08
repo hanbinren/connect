@@ -12,10 +12,9 @@ import os
 
 
 session = ftrack_api.Session(
-    server_url='https://ckyh.ftrackapp.cn',
-    api_key='NzM5YTcxN2ItMmFkYS00ZGYyLWExMGEtZTIwZTYzOTM4Y2JmOjplNTZkNjIxZC0xNDJjLTQyOGQtODhiOC00ZDI2NmQzZWU2ZTA',
-    api_user='hanbin'
-)
+server_url='https://ckyh.ftrackapp.cn',
+    api_key='OWM1ODBmMjktMTYxMi00YTVhLWFkMzAtODY3NjQ0NzE1OGI2Ojo1YzQ4YWE0Ny01OWFkLTQ4ODYtYWIzNC0yMWQwNzkwMTY5ZTQ',
+    api_user='wangxiaowei@ckyhvfx.com')
 
 
 # In[15]:

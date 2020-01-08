@@ -1,6 +1,6 @@
 # coding: utf-8
 from ftrack_api import entity
-# import ftrack_api.entity.base
+import ftrack_api.entity.location
 import ftrack_api.entity.factory
 import ftrack_api.entity.base
 import ftrack_api.cache
@@ -19,7 +19,9 @@ session=ftrack_api.Session(
 # project_dict = {}
 # seq={}
 # c = []
-# projects_1 = session.query('Project where name is dayingjia_dyj')
+# projects_1 = session.query('Shot where project.name is "rndtest_rndt"'
+#                      'and parent.name is "seq1"and name is "0010"')
+
 # print projects_1
 # hierarchy = projects_1[0]['children']
 # print hierarchy
@@ -54,8 +56,10 @@ session=ftrack_api.Session(
 # print task_id.all()
 # task = task_id[0]['id']
 # print task
+
+
 #获取任务的ID
-task = session.get('Task','f6e644e0-f6d4-11e9-a07d-0a58ac1e0254')
+task = session.get('Task','add1dbc2-fe0c-11e9-b582-0a58ac1e0254')
 #任务的父级用与以下发布资产
 task_parent = task['parent']
 print task_parent
@@ -64,7 +68,7 @@ task_type = session.query('AssetType where name is "Geometry"').one()
 print task_type
 #创建一个资产
 asset = session.create('Asset',{
-    'name':'my asset',
+    'name':'rndt_seq1_0010_comp_v051_ytj',
     'type':task_type,
     'parent':task_parent
 })
@@ -77,63 +81,45 @@ asset_version = session.create('AssetVersion',{
 print asset_version
 print asset_version['id']
 s = asset_version.items()
-print s
-for a in s:
-    print a[0]
 
 
+location2 = session.query('Location where name is "ftrack.unmanaged"').one()
+location = session.query('Location where name is "rd2.y"').one()
+location1 = session.query('Location where name is "my.location"').one()
 
 
+ftrack_api.mixin(location,ftrack_api.entity.location.UnmanagedLocationMixin)
+path = r'y:'
 
+location.accessor=ftrack_api.accessor.disk.DiskAccessor(prefix=path)
+location.structure = ftrack_api.structure.origin.OriginStructure(prefix=r'')
 
+#拿到资源标识符
+component_path = r'{0}\rndtest_rndt\seq1\0010\comp\v006\fullres\rndt_seq1_0010_comp_v006_ytj.1005.exr'.format(path)
 
-
-
-
-
-
-
-#找到服务器路径
-loc = session.query('Location where name is "rd2.y"')
-print loc
-
-for l in loc:
-    print l['name']
-print loc[0].keys()
-
-y = loc[0]
-print y
-
-s = y.accessor = ftrack_api.accessor.disk.DiskAccessor(
-    prefix=r'\\rd2\render'
-)
-print s
-a = y.structure = ftrack_api.structure.origin.OriginStructure(
-    prefix=r''
-)
-print a
-#拿到要传入文件的路径
-path = r'y:\rndtest_rndt\seq1\0010\animation\v001rndt_seq1_0010_v021_wxw.exr'
 #任务不用做资产的父挤，把任务和assetversion直接连接
 #当我们有一个可以创建组建得的版本
 #这将自动创建一个新组件并将其添加到已配置为第一个优先级的位置
-asset_version.create_component(
-    path,
+
+component_a=asset_version.create_component(
+    component_path,
     data={
         'name':'render'
     },
-    location=y
+    location=location
 )
-
-asset_version['custom_attributes']['majorversion'] = 2
-asset_version['custom_attributes']['minorversion'] = 1
-for i in asset['versions']['custom_attributes']:
-    print i
-
-
-
+print component_a.get_availability()
+print location.get_filesystem_path(component_a)
 session.commit()
 session.close()
+# asset_version['custom_attributes']['majorversion'] = 2
+# asset_version['custom_attributes']['minorversion'] = 1
+# for i in asset['versions']['custom_attributes']:
+#     print i
+
+
+
+
 
 
 

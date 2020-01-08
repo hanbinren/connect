@@ -298,8 +298,8 @@ class ChildWindow(QtWidgets.QDialog, Ui_Dialog):
                 self.textEteil1.setRowCount(a)
                 for k,v in seq_dict.items():
                     print k,v
-                    #if v == 'Shot' or v == 'Asset Build' or v == 'Task':
-                    if v == 'Sequence':
+                    if v == 'Shot' or v == 'Asset Build' or v == 'Task':
+                    #if v == 'Sequence':
                         ne = QTableWidgetItem(k)
                         self.textEteil1.setItem(tm, 0, ne)
                         se = str(v)

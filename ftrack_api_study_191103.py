@@ -13,7 +13,7 @@ import os
 
 session = ftrack_api.Session(
     server_url='https://ckyh.ftrackapp.cn',
-    api_key='NzM5YTcxN2ItMmFkYS00ZGYyLWExMGEtZTIwZTYzOTM4Y2JmOjplNTZkNjIxZC0xNDJjLTQyOGQtODhiOC00ZDI2NmQzZWU2ZTA',
+    api_key='OWM1ODBmMjktMTYxMi00YTVhLWFkMzAtODY3NjQ0NzE1OGI2Ojo1YzQ4YWE0Ny01OWFkLTQ4ODYtYWIzNC0yMWQwNzkwMTY5ZTQ',
     api_user='hanbin'
 )
 
@@ -193,7 +193,8 @@ session.close()
 
 v = session.query('AssetVersion where custom_attributes any ( key is "versionname" and value is "dsr_hy_0090_fx_smoke_smoke_wl_v004_v004_thh")')
 print v
-v[0]['custom_attributes']['versionname']
+a = v[0]['custom_attributes']['versionname']
+print a
 
 
 # ### 测试
