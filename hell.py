@@ -6,7 +6,6 @@ import ftrack_api.entity.base
 import ftrack_api.cache
 import ftrack_api.accessor.disk
 import ftrack_api.structure.origin
-
 import os
 import arrow
 import ftrack_api
@@ -56,48 +55,34 @@ session=ftrack_api.Session(
 # print task_id.all()
 # task = task_id[0]['id']
 # print task
-
-
+ROOT_DIR = 'Y:\\'
+os.environ['FTRACK_EVENT_PLUGIN_PATH'] = os.path.join(ROOT_DIR, 'myplugins', 'ftrack-plugins')
+os.environ['FTRACK_EVENT_PLUGIN_PATH'] += os.pathsep + os.path.join(ROOT_DIR,'myplugins','ftrack-plugins')
 #获取任务的ID
 task = session.get('Task','add1dbc2-fe0c-11e9-b582-0a58ac1e0254')
 #任务的父级用与以下发布资产
 task_parent = task['parent']
-print task_parent
 #创建资产和该资产的版本
 task_type = session.query('AssetType where name is "Geometry"').one()
-print task_type
 #创建一个资产
 asset = session.create('Asset',{
-    'name':'rndt_seq1_0010_comp_v051_ytj',
+    'name':'rndt_seq1_0010_comp_v079_ytj',
     'type':task_type,
     'parent':task_parent
 })
-print asset
 #创建一个版本
 asset_version = session.create('AssetVersion',{
     'asset':asset,
     'task':task
 })
-print asset_version
-print asset_version['id']
-s = asset_version.items()
-
-
-location2 = session.query('Location where name is "ftrack.unmanaged"').one()
-location = session.query('Location where name is "rd2.y"').one()
-location1 = session.query('Location where name is "my.location"').one()
-
-
+location = session.query('Location where name is "rd2"').one()
 ftrack_api.mixin(location,ftrack_api.entity.location.UnmanagedLocationMixin)
-path = r'y:'
-
-location.accessor=ftrack_api.accessor.disk.DiskAccessor(prefix=path)
+path = r'y:\rndtest_rndt\seq1\0010\comp\v006\fullres\rndt_seq1_0010_comp_v006_ytj.1005.exr'
+location.accessor = ftrack_api.accessor.disk.DiskAccessor(prefix=path)
 location.structure = ftrack_api.structure.origin.OriginStructure(prefix=r'')
-
 #拿到资源标识符
-component_path = r'{0}\rndtest_rndt\seq1\0010\comp\v006\fullres\rndt_seq1_0010_comp_v006_ytj.1005.exr'.format(path)
-
-#任务不用做资产的父挤，把任务和assetversion直接连接
+component_path = path
+#任务不用做资产的父级，把任务和assetversion直接连接
 #当我们有一个可以创建组建得的版本
 #这将自动创建一个新组件并将其添加到已配置为第一个优先级的位置
 

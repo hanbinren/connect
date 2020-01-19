@@ -9,6 +9,7 @@
           <option value="list.clear" />
           <option value="int.append" />
           <option value="ttt.pyqtSlog" />
+          <option value="ftrack" />
         </list>
       </option>
     </inspection_tool>

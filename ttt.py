@@ -311,6 +311,7 @@ class ChildWindow(QtWidgets.QDialog, Ui_Dialog):
                         type_par = type_name[0]['parent']
                         name = type_par['name']
                         self.textEteil.setPlaceholderText(str(name))
+                        continue
             else:
                 #二次返回
                 a = len([k for k, v in project_dict.items()])
